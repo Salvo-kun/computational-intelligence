@@ -1,4 +1,4 @@
-# Computational Intelligence - Lab 1
+# Computational Intelligence - Lab 2
 
 # Collaboration
 This work was done in collaboration with: 
@@ -11,7 +11,7 @@ This work was done in collaboration with:
 # Methods
 
 ## Evolutionary Algorithm
-Many factors were evaluated empirically running grid searches and varying factors. A small example of grid search used is provided in the code itself, varying the size of the population and the size of the offspring. In this analysis, it has been chosen population_size = 2*N and offspring_size = 1.625*population_size
+Many factors were evaluated empirically running grid searches and varying factors. A small example of grid search used is provided in the code itself, varying the size of the population and the size of the offspring. In this analysis, it has been chosen population_size = 2 * N and offspring_size = 1.625 * population_size
 Moreover, it has been noticed that starting from an empty solution allows to reach overall better local minima before finding a steady state.
 An individual is a list of 1s and 0s, indicating if the i-th list of the problem is taken or not.
 The chosen fitness is based on a tuple:
