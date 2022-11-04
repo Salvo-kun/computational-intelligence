@@ -10,7 +10,7 @@ This work was done in collaboration with:
 
 # Methods
 
-## Evolutionary Algorithm
+## Genetic Algorithm
 Many factors were evaluated empirically running grid searches and varying factors. A small example of grid search used is provided in the code itself, varying the size of the population and the size of the offspring. In this analysis, it has been chosen population_size = 2 * N and offspring_size = 1.625 * population_size. 
 
 Moreover, it has been noticed that starting from an empty solution allows to reach overall better local minima before finding a steady state. 
@@ -34,15 +34,14 @@ The algorithm ends on two conditions:
 A graph displays the trend of the fitness (two curves since made of two elements) for each execution.
 
 # Results
-N = 5\
-Found a solution with 5 elements\
-N = 10\
-Found a solution with 11 elements\
-N = 20\
-Found a solution with 28 elements\
-N = 100\
-Found a solution with 232 elements\
-N = 500\
-Found a solution with 1475 elements\
-N = 1000\
-Found a solution with 3391 elements
+Solution found for N=5: w=5 (bloat=0%) after 13 generations. Tournament size: 2. Population size: 7. Offspring size: 13. Evaluated fitness 176 times.
+
+Solution found for N=10: w=10 (bloat=0%) after 15 generations. Tournament size: 5. Population size: 18. Offspring size: 28. Evaluated fitness 438 times.
+
+Solution found for N=20: w=24 (bloat=20%) after 21 generations. Tournament size: 2. Population size: 22. Offspring size: 40. Evaluated fitness 862 times.
+
+Solution found for N=100: w=193 (bloat=93%) after 16 generations. Tournament size: 14. Population size: 200. Offspring size: 400. Evaluated fitness 6600 times.
+
+Solution found for N=500: w=1388 (bloat=177%) after 18 generations. Tournament size: 11. Population size: 663. Offspring size: 1177. Evaluated fitness 21849 times.
+
+Solution found for N=1000: w=3266 (bloat=226%) after 26 generations. Tournament size: 8. Population size: 1326. Offspring size: 1757. Evaluated fitness 47008 times.
