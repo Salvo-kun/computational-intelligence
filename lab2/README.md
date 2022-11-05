@@ -11,7 +11,7 @@ This work was done in collaboration with:
 # Methods
 
 ## Genetic Algorithm
-Many factors were evaluated empirically running grid searches and varying factors. A small example of grid search used is provided in the code itself, varying the size of the population and the size of the offspring. In this analysis, it has been chosen population_size = 2 * N and offspring_size = 1.625 * population_size. 
+Many factors were evaluated empirically running grid searches and varying factors. A small example of grid search used is provided in the code itself, varying the size of the population, the size of the offspring and the size of the tournament. In this analysis, for the sake of showing the best results detected, it has been chosen to keep the best parameters for each N. 
 
 Moreover, it has been noticed that starting from an empty solution allows to reach overall better local minima before finding a steady state. 
 
