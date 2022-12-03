@@ -42,17 +42,20 @@ Then, two possible outcomes are possible:
 In the first case, it returns the first perfect move, while in the second case it returns the first available move since there is not a preference.
 
 The set of rules the individual can be composed of are:
-- xor
 - sum
 - min
 - max
 - mean
 - stdev
 
+N.B. my_xor rule, i.e. nim-sum, was excluded to avoid converging to the optimal solution which we already know and also to avoid bias.
+
 The score above mentioned is calculated as a linear combination of these function (multiplied by the corresponding factor in the individual's genome: 0 if inactive, 1 if active) applied to the state of the board after a move.
 
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate was 3.5 % (7.5/200)
-- Evolved strategy win rate was 55.0 % (110.0/200)
+- Fixed strategy win rate was 4.5 % (9.0/200)
+- Evolved strategy win rate was 5.5 % (11.0/200)
+
+The evolved strategy with the above parameters found, as best individual, the one using the rule min and stdev. So it seems to prefer moves which clear the rows and minimize the standard deviation between rows.
