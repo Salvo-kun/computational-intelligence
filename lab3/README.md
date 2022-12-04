@@ -10,7 +10,7 @@ This work was done in collaboration with:
 
 # Methods
 
-# Fixed-Rule Strategy
+# Task 3.1: Fixed-Rule Strategy
 This is a fixed strategy based on the current Nim state and the possible moves from that state.
 
 It is based on the idea of checking if there is a winning move in the next state after our move, and avoid it (avoids oppenent's win with depth = 1) . 
@@ -22,40 +22,50 @@ The algorithm, based on all possible moves from the current state, simply does t
 
 Notice that a situation is considered winning for an opponent if he can win in one move, i.e. if there is one row with at most n elements (where n is k if it is defined, otherwise is the current number of objects in the row)
 
-# Evolved strategy
+# Task 3.2: Evolved strategy
+
+## General information
 This strategy is based on a GA. The parameters of the GA are the following:
 - NUM_GENS = 100    
 - POPULATION_SIZE = 10
 - OFFSPRING_SIZE = 20
 - TOURNAMENT_SIZE = 2
-- USELESS_GENS = 0
 - STEADY_STATE_LIMIT = 10
+- GENOME_LENGTH = 11
 
-The GA has a population of individuals which are bit strings encoding which rules are taken into account to evaluate if a move is a winning move.
+The GA has a population of individuals which are real values in [0, 1] encoding which rules are taken into account to evaluate the score of a move.
+The rule found is applied to the values of the rows (two by two until a result is found) of the state of the nim board after a move and outputs an integer value: the lower the score, the better the move (i.e. the move with minimum score is chosen).
+
 The population evolves either by mutation or by crossover, the individuals for genetic operators are chosen from tournaments and the algorithm stops if no improvements are made after some generations (steady state).
 
 The strategy uses the individual and the current state of the Nim board. It first evaluates all possible moves and calculates a score applying all the rules which compose the individual.
-Then, two possible outcomes are possible:
-- there is at least "perfect move", i.e. score = 0
-- there is not a perfect move
+Then, it chooses the move with the lowest score.
 
-In the first case, it returns the first perfect move, while in the second case it returns the first available move since there is not a preference.
+## Individual encoding
+The individual is encoded as a rule according to the following specifications:
+- an individual genome is a concatenation of 1 or more basic expressions between two operands (a and b)
+- a basic expression is made by a op b, so it is represented by three components, i.e. genes (a, op, b)
+- two expressions can be concatenated by an op, i.e. one extra gene
 
-The set of rules the individual can be composed of are:
-- sum
-- min
-- max
-- mean
-- stdev
+Thus, GENOME_LENGTH must be of the form 4*n + 3 with n > 0, since it must be made at least by a basic expression (3 genes) and then n concatenated basic expressions (3 genes + 1 gene for concatenation).
+Moreover, each gene is evaluated like this:
+- for a and b, if their gene is < 0.5, their value is kept unchanged, otherwise they are preceded by a bitwise not
+- op will be an AND operator if its gene is < 0.5, otherwise it will be an OR operator.
 
-N.B. my_xor rule, i.e. nim-sum, was excluded to avoid converging to the optimal solution which we already know and also to avoid bias.
+This way, an individual encodes a boolean function with two inputs (a, b) and combines them using biwise not, or, and operators.
 
-The score above mentioned is calculated as a linear combination of these function (multiplied by the corresponding factor in the individual's genome: 0 if inactive, 1 if active) applied to the state of the board after a move.
+Notice that if genome length > 3 (i.e. 7, 11, 15...) there is the probability it will converge to the nim-sum solution, altough this becomes less probable when the length increases, having instead the highest probability when GENOME_LENGTH = 7. 
+Here, GENOME_LENGTH = 11 was used and the solution presented did not converge to the nim-sum one. 
+
+Xor operator was not added to the set of possible ones in order to reduce the probability of converging to nim-sum solution.
 
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate was 4.5 % (9.0/200)
-- Evolved strategy win rate was 5.5 % (11.0/200)
+- Fixed strategy win rate against random strategy was 82.5 % (165.0/200)
+- Evolved strategy win rate against random strategy was 65.0 % (130.0/200)
+- Fixed strategy win rate against optimal strategy was 4.5 % (9.0/200)
+- Evolved strategy win rate against optimal strategy was 23.0 % (46.0/200)
 
-The evolved strategy with the above parameters found, as best individual, the one using the rule min and stdev. So it seems to prefer moves which clear the rows and minimize the standard deviation between rows.
+The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual, which represents the following rule: (a & b) & (!a | b) | (!a & !b).
+We can notice that the evolved strategy, against a random strategy, performs better than it but worse than the fixed strategy, however it proves beneficial against the optimal strategy.
