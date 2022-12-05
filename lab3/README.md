@@ -7,6 +7,7 @@ This work was done in collaboration with:
 
 # Sources
 * [Materials from course's repository](https://github.com/squillero/computational-intelligence/blob/master/2022-23/)
+* [Alpha-beta pruning on Wikipedia](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning)
 
 # Methods
 
@@ -30,7 +31,7 @@ This strategy is based on a GA. The parameters of the GA are the following:
 - POPULATION_SIZE = 10
 - OFFSPRING_SIZE = 20
 - TOURNAMENT_SIZE = 2
-- STEADY_STATE_LIMIT = 10
+- STEADY_STATE_LIMIT = 5
 - GENOME_LENGTH = 11
 
 The GA has a population of individuals which are real values in [0, 1] encoding which rules are taken into account to evaluate the score of a move.
@@ -59,13 +60,28 @@ Here, GENOME_LENGTH = 11 was used and the solution presented did not converge to
 
 Xor operator was not added to the set of possible ones in order to reduce the probability of converging to nim-sum solution.
 
+## Fitness function
+The fitness of an individual is calculated as the percentage of won matches against the optimal rule and the random rule.
+
+# Task 3.3: MinMax strategy
+MinMax strategy follows minmax approach, hence the name. Starting from a a Nim state, it finds the best move by evaluating all possible moves (minimizing the child moves for the player, while maximizing the child moves for its opponent). There are two versions of minmax:
+- without pruning
+- with bounded alpha-beta pruning
+
+The first version simply checks all the possible moves and will not converge in a reasonable amount of time as soon as the nim size grows.
+
+The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time).
+
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate against random strategy was 82.5 % (165.0/200)
-- Evolved strategy win rate against random strategy was 65.0 % (130.0/200)
-- Fixed strategy win rate against optimal strategy was 4.5 % (9.0/200)
-- Evolved strategy win rate against optimal strategy was 23.0 % (46.0/200)
+- Fixed strategy win rate against Optimal strategy was 13.64 % (12.0/88)
+- Fixed strategy win rate against Random strategy was 80.68 % (71.0/88)
+- Evolved strategy win rate against Optimal strategy was 17.05 % (15.0/88)
+- Evolved strategy win rate against Random strategy was 77.27 % (68.0/88)
+- MinMax strategy win rate against Optimal strategy was 19.32 % (17.0/88)
+- MinMax strategy win rate against Random strategy was 88.64 % (78.0/88)
 
-The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual, which represents the following rule: (a & b) & (!a | b) | (!a & !b).
-We can notice that the evolved strategy, against a random strategy, performs better than it but worse than the fixed strategy, however it proves beneficial against the optimal strategy.
+The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual, which represents the following rule: (a & !b) & (!a | b) | (a | b).
+We can notice that the evolved strategy, against a random strategy, performs better than it but slightly than the fixed strategy, however it proves slightly more beneficial against the optimal strategy with respect to the fixed strategy.
+We got the best performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies.
