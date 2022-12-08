@@ -66,11 +66,23 @@ The fitness of an individual is calculated as the percentage of won matches agai
 # Task 3.3: MinMax strategy
 MinMax strategy follows minmax approach, hence the name. Starting from a a Nim state, it finds the best move by evaluating all possible moves (minimizing the child moves for the player, while maximizing the child moves for its opponent). There are two versions of minmax:
 - without pruning
-- with bounded alpha-beta pruning
+- with bounded alpha-beta pruning and caching
 
 The first version simply checks all the possible moves and will not converge in a reasonable amount of time as soon as the nim size grows.
 
-The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time).
+The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time). Caching is used to avoid revisiting already visited situations.
+
+# Task 3.4: Reinforcement Learning strategy
+This approach is based on a training phase on a specific Nim game. Here, a table of the explored states is used to keep track about a state and its associated reward. This lookup table is used to decide which move has to be chosen (the one associated with the state which has the ighest reward).
+
+In the training phase, there is an adjustable balance between exploitation and exploration, bases on a factor (randomness) which decide if a given move has to be chosen based on the best reward or by chance.
+
+Notice that, since there are too many states for a nim-size > 5, it is preferred not to initialize Q with all states but to add them each time they are visited.
+For our test we used this configuration:
+- training_epochs = 100
+- randomness = 0.3
+- learning_rate = 0.15
+- max_depth = math.inf
 
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
@@ -81,7 +93,10 @@ Out of 100 random matches (random size and random k), played both as first playe
 - Evolved strategy win rate against Random strategy was 77.27 % (68.0/88)
 - MinMax strategy win rate against Optimal strategy was 19.32 % (17.0/88)
 - MinMax strategy win rate against Random strategy was 88.64 % (78.0/88)
+- RL strategy win rate against Optimal strategy was 13.64 % (12.0/88)
+- RL strategy win rate against Random strategy was 53.41 % (47.0/88)
 
-The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual, which represents the following rule: (a & !b) & (!a | b) | (a | b).
+The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual found in one of the runs, which represents the following rule: (a & !b) & (!a | b) | (a | b) (genome: [0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0]).
 We can notice that the evolved strategy, against a random strategy, performs better than it but slightly than the fixed strategy, however it proves slightly more beneficial against the optimal strategy with respect to the fixed strategy.
-We got the best performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies.
+We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies.
+Also the RL strategy obtains good performances against the optimal, however it performs poorly against the random strategy.
