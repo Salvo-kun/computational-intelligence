@@ -85,7 +85,7 @@ For our test we used this configuration:
 - max_depth = math.inf
 
 # Results
-Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
+Out of 88 random matches (all combinations of size and k, with size going from 2 to 9), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
 - Fixed strategy win rate against Optimal strategy was 14.77 % (13.0/88)
 - Fixed strategy win rate against Random strategy was 78.41 % (69.0/88)
