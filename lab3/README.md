@@ -7,6 +7,7 @@ This work was done in collaboration with:
 
 # Sources
 * [Materials from course's repository](https://github.com/squillero/computational-intelligence/blob/master/2022-23/)
+* [Alpha-beta pruning on Wikipedia](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning)
 
 # Methods
 
@@ -30,7 +31,7 @@ This strategy is based on a GA. The parameters of the GA are the following:
 - POPULATION_SIZE = 10
 - OFFSPRING_SIZE = 20
 - TOURNAMENT_SIZE = 2
-- STEADY_STATE_LIMIT = 10
+- STEADY_STATE_LIMIT = 5
 - GENOME_LENGTH = 11
 
 The GA has a population of individuals which are real values in [0, 1] encoding which rules are taken into account to evaluate the score of a move.
@@ -59,13 +60,43 @@ Here, GENOME_LENGTH = 11 was used and the solution presented did not converge to
 
 Xor operator was not added to the set of possible ones in order to reduce the probability of converging to nim-sum solution.
 
+## Fitness function
+The fitness of an individual is calculated as the percentage of won matches against the optimal rule and the random rule.
+
+# Task 3.3: MinMax strategy
+MinMax strategy follows minmax approach, hence the name. Starting from a a Nim state, it finds the best move by evaluating all possible moves (minimizing the child moves for the player, while maximizing the child moves for its opponent). There are two versions of minmax:
+- without pruning
+- with bounded alpha-beta pruning and caching
+
+The first version simply checks all the possible moves and will not converge in a reasonable amount of time as soon as the nim size grows.
+
+The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time). Caching is used to avoid revisiting already visited situations and its size is bounded to 1M entries.
+
+# Task 3.4: Reinforcement Learning strategy
+This approach is based on a training phase on a specific Nim game. Here, a table of the explored states is used to keep track about a state and its associated reward. This lookup table is used to decide which move has to be chosen (the one associated with the state which has the ighest reward).
+
+In the training phase, there is an adjustable balance between exploitation and exploration, bases on a factor (randomness) which decide if a given move has to be chosen based on the best reward or by chance.
+
+Notice that, since there are too many states for a nim-size > 5, it is preferred not to initialize Q with all states but to add them each time they are visited.
+For our test we used this configuration:
+- training_epochs = 100
+- randomness = 0.3
+- learning_rate = 0.15
+- max_depth = math.inf
+
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate against random strategy was 82.5 % (165.0/200)
-- Evolved strategy win rate against random strategy was 65.0 % (130.0/200)
-- Fixed strategy win rate against optimal strategy was 4.5 % (9.0/200)
-- Evolved strategy win rate against optimal strategy was 23.0 % (46.0/200)
+- Fixed strategy win rate against Optimal strategy was 14.77 % (13.0/88)
+- Fixed strategy win rate against Random strategy was 78.41 % (69.0/88)
+- Evolved strategy win rate against Optimal strategy was 14.77 % (13.0/88)
+- Evolved strategy win rate against Random strategy was 75.0 % (66.0/88)
+- MinMax strategy win rate against Optimal strategy was 18.18 % (16.0/88)
+- MinMax strategy win rate against Random strategy was 75.0 % (66.0/88)
+- RL strategy win rate against Optimal strategy was 11.36 % (10.0/88)
+- RL strategy win rate against Random strategy was 50.0 % (44.0/88)
 
-The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual, which represents the following rule: (a & b) & (!a | b) | (!a & !b).
-We can notice that the evolved strategy, against a random strategy, performs better than it but worse than the fixed strategy, however it proves beneficial against the optimal strategy.
+The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual found in one of the runs, which represents the following rule: (a & !b) & (!a | b) | (a | b) (genome: [0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0]).
+We can notice that the evolved strategy, against a random strategy, performs better than it but slightly less than the fixed strategy, while they are on par against optimal strategy.
+We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies. This is our best model and if we extend the bound we can get also better results.
+The RL strategy obtains accetptable performances against the optimal strategy, however it performs poorly against the random strategy.
