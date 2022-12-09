@@ -70,7 +70,7 @@ MinMax strategy follows minmax approach, hence the name. Starting from a a Nim s
 
 The first version simply checks all the possible moves and will not converge in a reasonable amount of time as soon as the nim size grows.
 
-The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time). Caching is used to avoid revisiting already visited situations.
+The second version is able to perform pruning based on the alpha-beta pruning strategy and it also exploits a bound (passed externally) to eventually stop at some depth (not optimal but required in order to always get a move in a reasonable amount of time). Caching is used to avoid revisiting already visited situations and its size is bounded to 1M entries.
 
 # Task 3.4: Reinforcement Learning strategy
 This approach is based on a training phase on a specific Nim game. Here, a table of the explored states is used to keep track about a state and its associated reward. This lookup table is used to decide which move has to be chosen (the one associated with the state which has the ighest reward).
@@ -87,16 +87,16 @@ For our test we used this configuration:
 # Results
 Out of 100 random matches (random size and random k), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate against Optimal strategy was 13.64 % (12.0/88)
-- Fixed strategy win rate against Random strategy was 80.68 % (71.0/88)
-- Evolved strategy win rate against Optimal strategy was 17.05 % (15.0/88)
-- Evolved strategy win rate against Random strategy was 77.27 % (68.0/88)
-- MinMax strategy win rate against Optimal strategy was 19.32 % (17.0/88)
-- MinMax strategy win rate against Random strategy was 88.64 % (78.0/88)
-- RL strategy win rate against Optimal strategy was 13.64 % (12.0/88)
-- RL strategy win rate against Random strategy was 53.41 % (47.0/88)
+- Fixed strategy win rate against Optimal strategy was 14.77 % (13.0/88)
+- Fixed strategy win rate against Random strategy was 78.41 % (69.0/88)
+- Evolved strategy win rate against Optimal strategy was 14.77 % (13.0/88)
+- Evolved strategy win rate against Random strategy was 75.0 % (66.0/88)
+- MinMax strategy win rate against Optimal strategy was 18.18 % (16.0/88)
+- MinMax strategy win rate against Random strategy was 75.0 % (66.0/88)
+- RL strategy win rate against Optimal strategy was 11.36 % (10.0/88)
+- RL strategy win rate against Random strategy was 50.0 % (44.0/88)
 
 The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual found in one of the runs, which represents the following rule: (a & !b) & (!a | b) | (a | b) (genome: [0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0]).
-We can notice that the evolved strategy, against a random strategy, performs better than it but slightly than the fixed strategy, however it proves slightly more beneficial against the optimal strategy with respect to the fixed strategy.
-We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies.
-Also the RL strategy obtains good performances against the optimal, however it performs poorly against the random strategy.
+We can notice that the evolved strategy, against a random strategy, performs better than it but slightly less than the fixed strategy, while they are on par against optimal strategy.
+We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies. This is our best model and if we extend the bound we can get also better results.
+The RL strategy obtains accetptable performances against the optimal strategy, however it performs poorly against the random strategy.
