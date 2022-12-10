@@ -75,28 +75,28 @@ The second version is able to perform pruning based on the alpha-beta pruning st
 # Task 3.4: Reinforcement Learning strategy
 This approach is based on a training phase on a specific Nim game. Here, a table of the explored states is used to keep track about a state and its associated reward. This lookup table is used to decide which move has to be chosen (the one associated with the state which has the ighest reward).
 
-In the training phase, there is an adjustable balance between exploitation and exploration, bases on a factor (randomness) which decide if a given move has to be chosen based on the best reward or by chance.
+In the training phase, there is an adjustable balance between exploitation and exploration, bases on a factor (randomness) which decide if a given move has to be chosen based on the best reward or by chance. Here, the algorithm plays against a random strategy, considering winning move from the RL's turn as positively rewarded and winning moves in the random's turn as negatively rewarded.
 
 Notice that, since there are too many states for a nim-size > 5, it is preferred not to initialize Q with all states but to add them each time they are visited.
-For our test we used this configuration:
-- training_epochs = 100
-- randomness = 0.3
-- learning_rate = 0.15
-- max_depth = math.inf
+For our tests we used this configuration:
+- training_epochs = 500
+- randomness = 0.2
+- learning_rate = 0.3
+- max_depth = 20
 
 # Results
 Out of 88 random matches (all combinations of size and k, with size going from 2 to 9), played both as first player and as second player to avoid bias, the above mentioned strategies produced these results:
 
-- Fixed strategy win rate against Optimal strategy was 14.77 % (13.0/88)
+- Fixed strategy win rate against Optimal strategy was 13.64 % (12.0/88)
 - Fixed strategy win rate against Random strategy was 78.41 % (69.0/88)
-- Evolved strategy win rate against Optimal strategy was 14.77 % (13.0/88)
-- Evolved strategy win rate against Random strategy was 75.0 % (66.0/88)
-- MinMax strategy win rate against Optimal strategy was 18.18 % (16.0/88)
-- MinMax strategy win rate against Random strategy was 75.0 % (66.0/88)
-- RL strategy win rate against Optimal strategy was 11.36 % (10.0/88)
-- RL strategy win rate against Random strategy was 50.0 % (44.0/88)
+- Evolved strategy win rate against Optimal strategy was 20.45 % (18.0/88)
+- Evolved strategy win rate against Random strategy was 79.55 % (70.0/88)
+- MinMax strategy win rate against Optimal strategy was 15.91 % (14.0/88)
+- MinMax strategy win rate against Random strategy was 77.27 % (68.0/88)
+- RL strategy win rate against Optimal strategy was 12.5 % (11.0/88)
+- RL strategy win rate against Random strategy was 51.14 % (45.0/88)
 
 The evolved strategy (trained with the parameters specified in the previous section) is based on the best individual found in one of the runs, which represents the following rule: (a & !b) & (!a | b) | (a | b) (genome: [0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0]).
-We can notice that the evolved strategy, against a random strategy, performs better than it but slightly less than the fixed strategy, while they are on par against optimal strategy.
-We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies. This is our best model and if we extend the bound we can get also better results.
-The RL strategy obtains accetptable performances against the optimal strategy, however it performs poorly against the random strategy.
+We got good performances from the bounded-depth minmax with alpha-beta pruning, where the depth was bounded to 5, against both optimal and random strategies. 
+This is potentially the best model because it can converge to the optimal solution, if the depth has a larger bound, however it increases time and memory consumption quickly.
+The RL strategy obtains accetptable performances against the optimal strategy, however it performs worse than the other strategies against the random strategy.
